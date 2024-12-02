@@ -1,4 +1,4 @@
-import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from '@dtos/categories.dtos';
+import { CreateCategoryDto, UpdateCategoryDto } from '@dtos/categories.dtos';
 import { Controller, ParseIntPipe, Get, Param, Post, Body, Put, Delete } from '@nestjs/common';
 import { CategoriesService } from '@services/categories/categories.service';
 @Controller('categories')
@@ -15,10 +15,10 @@ export class CategoriesController {
   }
 
   @Post()
-  create(@Body() payload: CategoryDto) {
+  create(@Body() payload: CreateCategoryDto) {
     return this.categoriesService.create({
-      ...payload
-      , createAt: new Date(),
+      ...payload,
+      createAt: new Date(),
       updateAt: new Date()
     });
   }

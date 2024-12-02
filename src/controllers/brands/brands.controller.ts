@@ -21,7 +21,8 @@ export class BrandsController {
     @Post()
     create(@Body() payload: CreateBrandDto) {
         return this.brandsService.create(
-          {...payload,
+          {
+            ...payload,
             createAt: new Date(),
             updateAt: new Date()
           });

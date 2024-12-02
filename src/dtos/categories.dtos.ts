@@ -1,6 +1,6 @@
 import { IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { PartialType } from "@nestjs/mapped-types";
-export class CategoryDto {
+export class CreateCategoryDto {
 
   @IsString()
   @IsNotEmpty()
@@ -10,8 +10,6 @@ export class CategoryDto {
   @IsNotEmpty()
   readonly description: string;
 
-}
-export class CreateCategoryDto extends PartialType(CategoryDto) {
   @IsDate()
   @IsOptional()
   readonly createAt: Date;
@@ -20,5 +18,6 @@ export class CreateCategoryDto extends PartialType(CategoryDto) {
   @IsOptional()
   readonly updateAt: Date;
 }
+
 
 export class UpdateCategoryDto extends PartialType(CreateCategoryDto) { }

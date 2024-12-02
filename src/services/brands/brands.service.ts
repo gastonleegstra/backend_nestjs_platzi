@@ -27,7 +27,7 @@ export class BrandsService {
     let newBrand: Brand = {
       id,
       ...payload
-    };
+    }
 
     this.brands.push(newBrand);
     return newBrand;
