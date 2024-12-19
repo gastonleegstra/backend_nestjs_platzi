@@ -18,24 +18,13 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@controllers/*": [
-      "./src/controllers/*"
-    ],
-      "@services/*": [
-      "./src/services/*"
-    ],
-      "@modules/*": [
-      "./src/modules/*"
-    ],
-      "@decorators/*": [
-      "./src/decorators/*"
-    ],
-      "@entities/*": [
-      "./src/entities/*"
-    ],
-    "@dtos/*": [
-      "./src/dtos/*"
-    ]
+      "@authModule/*": ["./src/auth/*"],
+      "@brandsModule/*": ["./src/brands/*"],
+      "@categoriesModule/*": ["./src/categories/*"],
+      "@customersModule/*": ["./src/customers/*"],
+      "@ordersModule/*": ["./src/orders/*"],
+      "@productsModule/*": ["./src/products/*"],
+      "@usersModule/*": ["./src/users/*"],
     }
   }
 }
