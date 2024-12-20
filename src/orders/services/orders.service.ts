@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { createOrderDto, updateOrderDto } from '@ordersModule/dtos/orders.dtos';
+import { createOrderDto, updateOrderDto } from '@ordersModule/dtos/orders.dto';
 import { Product } from '@productsModule/entities/product.entity';
 import { Order } from '@ordersModule/entities/order.entity';
 import { CustomersService } from '@customersModule/services/customers.service';

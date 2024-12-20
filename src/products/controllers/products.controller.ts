@@ -1,6 +1,6 @@
 import { Controller, Query, Get, Param, Post, Body, Put, Delete, ParseIntPipe, NotFoundException } from '@nestjs/common';
 import { ProductsService } from '@productsModule/services/products.service';
-import { CreateProductDto, UpdateProductDto, ProductDto } from '@productsModule/dtos/products.dtos';
+import { CreateProductDto, UpdateProductDto, ProductDto } from '@productsModule/dtos/products.dto';
 
 @Controller('products')
 export class ProductsController {

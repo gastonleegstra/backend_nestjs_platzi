@@ -1,5 +1,5 @@
 import { IsOptional, IsDate,IsNotEmpty, IsNumber, IsString, IsUrl, IsPositive } from "class-validator";
-import { PartialType } from "@nestjs/mapped-types";
+import { PartialType } from "@nestjs/swagger";
 import e from "express";
 export class ProductDto {
     @IsString()

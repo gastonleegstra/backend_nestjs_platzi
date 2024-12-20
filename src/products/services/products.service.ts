@@ -1,4 +1,4 @@
-import { CreateProductDto, UpdateProductDto } from '@productsModule/dtos/products.dtos';
+import { CreateProductDto, UpdateProductDto } from '@productsModule/dtos/products.dto';
 import { Injectable } from '@nestjs/common';
 import { Product } from '@productsModule/entities/product.entity';
 

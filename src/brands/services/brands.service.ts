@@ -1,4 +1,4 @@
-import { CreateBrandDto, UpdateBrandDto } from '@brandsModule/dtos/brands.dtos';
+import { CreateBrandDto, UpdateBrandDto } from '@brandsModule/dtos/brands.dto';
 import { Brand } from 'src/brands/entities/brand.entity';
 import { Injectable } from '@nestjs/common';
 

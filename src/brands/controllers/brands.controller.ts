@@ -1,6 +1,7 @@
-import { CreateBrandDto, UpdateBrandDto } from '@brandsModule/dtos/brands.dtos';
 import { Controller, Query, Get, Param, Post, Body, Put, Delete, ParseIntPipe } from '@nestjs/common';
-import { BrandsService } from 'src/brands/services/brands.service';
+
+import { CreateBrandDto, UpdateBrandDto } from '@brandsModule/dtos/brands.dto';
+import { BrandsService } from '@brandsModule/services/brands.service';
 
 @Controller('brands')
 export class BrandsController {

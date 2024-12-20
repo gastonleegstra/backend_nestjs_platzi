@@ -1,4 +1,4 @@
-import { AddressDto, CreateCustomerDto } from '@customersModule/dtos/customers.dtos';
+import { AddressDto, CreateCustomerDto } from '@customersModule/dtos/customers.dto';
 import { Controller, Get, Param, Post, Body, Put, Delete, ParseIntPipe } from '@nestjs/common';
 import { CustomersService } from '@customersModule/services/customers.service';
 import { Address } from '@customersModule/entities/customer.entity';

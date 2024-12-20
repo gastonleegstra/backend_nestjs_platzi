@@ -1,5 +1,5 @@
 import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsPhoneNumber, IsString } from "class-validator";
-import { PartialType } from "@nestjs/mapped-types";
+import { PartialType } from "@nestjs/swagger";
 
 export class AddressDto {
   @IsNotEmpty()

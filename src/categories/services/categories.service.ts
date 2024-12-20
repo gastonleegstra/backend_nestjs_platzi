@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Category } from '@categoriesModule/entities/category.entity';
-import { CreateCategoryDto, UpdateCategoryDto } from '@categoriesModule/dtos/categories.dtos';
+import { CreateCategoryDto, UpdateCategoryDto } from '@categoriesModule/dtos/categories.dto';
 @Injectable()
 export class CategoriesService {
   private categories: Category[] = [

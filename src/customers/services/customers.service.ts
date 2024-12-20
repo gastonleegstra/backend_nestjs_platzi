@@ -1,4 +1,4 @@
-import { CreateCustomerDto, UpdateCustomerDto } from '@customersModule/dtos/customers.dtos';
+import { CreateCustomerDto, UpdateCustomerDto } from '@customersModule/dtos/customers.dto';
 import { Customer } from '@customersModule/entities/customer.entity';
 import { Injectable } from '@nestjs/common';
 
