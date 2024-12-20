@@ -1,7 +1,7 @@
+import { User } from "@usersModule/entities/user.entity";
 export class Customer {
   id: number;
-  name: string;
-  phone: string;
+  user: User;
   address?: Address;
   createAt: Date;
   updateAt: Date;

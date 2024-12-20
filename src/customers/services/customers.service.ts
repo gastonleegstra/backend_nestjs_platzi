@@ -1,29 +1,16 @@
+import { Injectable } from '@nestjs/common';
+
 import { CreateCustomerDto, UpdateCustomerDto } from '@customersModule/dtos/customers.dto';
 import { Customer } from '@customersModule/entities/customer.entity';
-import { Injectable } from '@nestjs/common';
+import { UsersService } from '@usersModule/services/users.service';
+import { User } from '@usersModule/entities/user.entity';
 
 @Injectable()
 export class CustomersService {
-  private customers: Customer[] = [
-    {
-    id: 1,
-    name: 'Customer 1',
-    phone: '1234567890',
-    address: {
-      street: 'Street 1',
-      city: 'City 1',
-      state: 'State 1',
-      zipCode: '12345',
-    },
-    createAt: new Date(),
-    updateAt: new Date(),
-  },{
-    id: 2,
-    name: 'Customer 2',
-    phone: '1234567890',
-    createAt: new Date(),
-    updateAt: new Date(),
-  }];
+
+  constructor(private usersService: UsersService) { }
+
+  private customers: Customer[] = [];
 
   findAll() {
     return this.customers;
@@ -33,8 +20,10 @@ export class CustomersService {
   }
   create(payload: CreateCustomerDto) {
     let id = this.customers.length + 1;
+    let user: User = this.usersService.findOne(payload.id);
     let newCustomer: Customer = {
       id,
+      user,
       ...payload,
       createAt: new Date(),
       updateAt: new Date()
@@ -47,9 +36,11 @@ export class CustomersService {
     if (!customer) {
       return null;
     }
+    let user: User = this.usersService.findOne(payload.id);
     const index = this.customers.findIndex(item => item.id === id);
     this.customers[index] = {
       ...customer,
+      user,
       ...payload,
       updateAt: new Date()
     }

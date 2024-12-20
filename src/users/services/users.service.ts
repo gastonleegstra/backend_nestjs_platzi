@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { User } from '@usersModule/entities/user.entity';
+import { CreateUserDto,UpdateUserDto } from '@usersModule/dtos/users.dto';
 
 @Injectable()
 export class UsersService {
@@ -42,6 +43,16 @@ export class UsersService {
       return this.users[indexToUpdate];
     }
     return null;
+  }
+
+  delete(id: number) {
+    const user = this.findOne(id);
+    if (!user) {
+      return null;
+    }
+    const index = this.users.findIndex(item => item.id === id);
+    this.users.splice(index, 1);
+    return user;
   }
 
 }
