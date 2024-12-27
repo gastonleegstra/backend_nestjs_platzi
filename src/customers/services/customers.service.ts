@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { CreateCustomerDto, UpdateCustomerDto } from '@customersModule/dtos/customers.dto';
 import { Customer } from '@customersModule/entities/customer.entity';
@@ -8,51 +10,46 @@ import { User } from '@usersModule/entities/user.entity';
 @Injectable()
 export class CustomersService {
 
-  constructor(private usersService: UsersService) { }
+  constructor(
+    @InjectRepository(Customer) private customersRepository: Repository<Customer>,
+    private usersService: UsersService)
+  {}
 
-  private customers: Customer[] = [];
-
-  findAll() {
-    return this.customers;
+  async findAll(): Promise<Customer[]> {
+    return await this.customersRepository.find();
   }
-  findOne(id: number) {
-    return this.customers.find(customer => customer.id === id);
+  async findOne(id: number): Promise<Customer | null> {
+    return await this.customersRepository.findOneBy({id});
   }
-  create(payload: CreateCustomerDto) {
-    let id = this.customers.length + 1;
-    let user: User = this.usersService.findOne(payload.id);
-    let newCustomer: Customer = {
-      id,
+  async create(payload: CreateCustomerDto): Promise<Customer|null> {
+    let user: User = await this.usersService.findOne(payload.id);
+    let newCustomer = new Customer();
+    Object.assign(newCustomer, {
       user,
       ...payload,
       createAt: new Date(),
       updateAt: new Date()
-    }
-    this.customers.push(newCustomer);
+    })
+    this.customersRepository.save(newCustomer);
     return newCustomer;
   }
-  update(id: number, payload: UpdateCustomerDto) {
-    const customer = this.findOne(id);
-    if (!customer) {
-      return null;
-    }
-    let user: User = this.usersService.findOne(payload.id);
-    const index = this.customers.findIndex(item => item.id === id);
-    this.customers[index] = {
-      ...customer,
+  async update(id: number, payload: UpdateCustomerDto): Promise<Customer | null> {
+    const customerToUpdate = await this.customersRepository.findOneBy({id});
+    if (!customerToUpdate) return null;
+    let user: User = await this.usersService.findOne(payload.id);
+    Object.assign(customerToUpdate,{
+      ...customerToUpdate,
       user,
       ...payload,
       updateAt: new Date()
-    }
-    return this.customers[index];
+    })
+    await this.customersRepository.save(customerToUpdate);
+    return customerToUpdate;
   }
-  delete(id: number) {
-    const customer = this.findOne(id);
-    if (!customer) {
-      return null;
-    }
-    const index = this.customers.findIndex(item => item.id === id);
-    this.customers.splice(index, 1);
-    return customer;
+  async delete(id: number): Promise<Customer | null> {
+    const customerToDelete = await this.customersRepository.findOneBy({id});
+    if (!customerToDelete) return null;
+    await this.customersRepository.remove(customerToDelete);
+    return customerToDelete;
   }
 }

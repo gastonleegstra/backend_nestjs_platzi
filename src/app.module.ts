@@ -13,6 +13,7 @@ import { CustomersModule } from '@customersModule/customers.module';
 import { enviroments } from 'enviroments';
 import config from 'config';
 import { validate } from 'env.validation';
+import { DataModule } from './data/data.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { validate } from 'env.validation';
       isGlobal: true,
       validate,
     }),
+    DataModule,
   ],
   controllers: [AppController],
   providers: [AppService],

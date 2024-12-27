@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { createOrderDto, updateOrderDto } from '@ordersModule/dtos/orders.dto';
 import { Product } from '@productsModule/entities/product.entity';
 import { Order } from '@ordersModule/entities/order.entity';
@@ -7,56 +9,47 @@ import { ProductsService } from '@productsModule/services/products.service';
 
 @Injectable()
 export class OrdersService {
-  private orders: Order[] = [];
-  constructor(private customersService: CustomersService, private productsService: ProductsService) { }
-  create(payload: createOrderDto) {
-    let products: Product[] = payload.productsIds.map(id => this.productsService.findOne(id));
-    let customer = this.customersService.findOne(payload.customerId);
-    let id = this.orders.length + 1;
-    let newOrder: Order = {
-      id,
+  constructor(
+    @InjectRepository(Order) private ordersRepository: Repository<Order>,
+    private customersService: CustomersService,
+    private productsService: ProductsService)
+    {}
+  async create(payload: createOrderDto): Promise<Order | null> {
+    let products: Product[] = await Promise.all(payload.productsIds.map(id => this.productsService.findOne(id)));
+    let customer = await this.customersService.findOne(payload.customerId);
+    let newOrder: Order = new Order();
+    Object.assign(newOrder, {
       customer,
       status: payload.status,
       products,
       total: products.reduce((total, product) => total + product.price, 0),
       createdAt: new Date(),
       updatedAt: new Date()
-    }
-    this.orders.push(newOrder);
+    })
+    this.ordersRepository.save(newOrder);
     return newOrder;
   }
-  update(id: number, payload: updateOrderDto) {
-    let index = this.orders.findIndex(order => order.id === id);
-    if (index === -1) return null;
-    let customer = payload.customerId ?
-     this.customersService.findOne(payload.customerId) :
-     this.orders[index].customer;
-    let products: Product[] = payload.productsIds && payload.productsIds.length > 0 ?
-      payload.productsIds.map(id => this.productsService.findOne(id)) :
-      this.orders[index].products;
-    let orderToUpdate = this.orders[index];
-    this.orders[index] = {
-      ...orderToUpdate,
-      customer,
-      products,
-      total: products.reduce((total, product) => total + product.price, 0),
-      updatedAt: new Date()
-    };
-    return this.orders[index];
+  async update(id: number, payload: updateOrderDto): Promise<Order | null> {
+    const orderToUpdate = await this.ordersRepository.findOneBy({id});
+    if(orderToUpdate) {
+        Object.assign(orderToUpdate, payload);
+        await this.ordersRepository.save(orderToUpdate);
+        return orderToUpdate;
+    }
+    return null;
   }
-  findAll() {
-    return this.orders;
+  async findAll(): Promise<Order[]> {
+    return await this.ordersRepository.find();
   }
-  findOne(id: number) {
-    return this.orders.find(order => order.id === id) || null;
+  async findOne(id: number): Promise<Order | null> {
+    return await this.ordersRepository.findOneBy({id}) ?? null;
   }
 
-  delete (id: number) {
-    let index = this.orders.findIndex(order => order.id === id);
-    if (index === -1) return null;
-    let orderDeleted = this.orders[index];
-    this.orders.splice(index, 1);
-    return orderDeleted;
+  async delete (id: number) {
+    let orderToDelete = await this.ordersRepository.findOneBy({id});
+    if (!orderToDelete) return null;
+    await this.ordersRepository.remove(orderToDelete);
+    return orderToDelete;
   }
 
 }

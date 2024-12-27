@@ -1,58 +1,38 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { User } from '@usersModule/entities/user.entity';
 import { CreateUserDto,UpdateUserDto } from '@usersModule/dtos/users.dto';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [
-    {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'H1K3G@example.com',
-      createAt: new Date(),
-      updateAt: new Date(),
-    }];
-  findAll() {
-    return this.users;
+
+  constructor(@InjectRepository(User) private usersRepository: Repository<User>) {}
+  async findAll(): Promise<User[]> {
+    return await this.usersRepository.find();
   }
 
-  findOne(id: number) {
-    return this.users.find(user => user.id === id);
+  async findOne(id: number): Promise<User | null> {
+    return await this.usersRepository.findOneBy({id});
   }
 
-  create(payload: any) {
-    const newUser: User = {
-      id: this.users.length + 1,
-      ...payload,
-      createAt: new Date(),
-      updateAt: new Date(),
-    };
-    this.users.push(newUser);
-    return newUser;
+  async create(payload: CreateUserDto) {
+    const newUser = this.usersRepository.create({...payload, createAt: new Date(), updateAt: new Date()});
+    return await this.usersRepository.save(newUser);
   }
 
-  update(id: number, payload: any) {
-    const indexToUpdate = this.users.findIndex(user => user.id === id);
-    if(indexToUpdate !== -1) {
-      this.users[indexToUpdate] = {
-        ...this.users[indexToUpdate],
-        ...payload
-      }
-      return this.users[indexToUpdate];
-    }
-    return null;
+  async update(id: number, payload: UpdateUserDto) {
+    const userToUpdate = await this.usersRepository.findOneBy({id});
+    if(!userToUpdate) return null;
+    this.usersRepository.merge(userToUpdate, {...payload, updateAt: new Date()});
+    return await this.usersRepository.save(userToUpdate);
   }
 
-  delete(id: number) {
-    const user = this.findOne(id);
-    if (!user) {
-      return null;
-    }
-    const index = this.users.findIndex(item => item.id === id);
-    this.users.splice(index, 1);
-    return user;
+  async delete(id: number): Promise<User | null> {
+    const userToDelete = await this.findOne(id);
+    if (!userToDelete) return null;
+    return await this.usersRepository.remove(userToDelete);
   }
 
 }
