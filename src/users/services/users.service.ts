@@ -9,11 +9,11 @@ import { CreateUserDto,UpdateUserDto } from '@usersModule/dtos/users.dto';
 export class UsersService {
 
   constructor(@InjectRepository(User) private usersRepository: Repository<User>) {}
-  async findAll(): Promise<User[]> {
+  async findAll() {
     return await this.usersRepository.find();
   }
 
-  async findOne(id: number): Promise<User | null> {
+  async findOne(id: number) {
     return await this.usersRepository.findOneBy({id});
   }
 
@@ -23,13 +23,13 @@ export class UsersService {
   }
 
   async update(id: number, payload: UpdateUserDto) {
-    const userToUpdate = await this.usersRepository.findOneBy({id});
+    const userToUpdate = await this.findOne(id);
     if(!userToUpdate) return null;
     this.usersRepository.merge(userToUpdate, {...payload, updateAt: new Date()});
     return await this.usersRepository.save(userToUpdate);
   }
 
-  async delete(id: number): Promise<User | null> {
+  async delete(id: number) {
     const userToDelete = await this.findOne(id);
     if (!userToDelete) return null;
     return await this.usersRepository.remove(userToDelete);

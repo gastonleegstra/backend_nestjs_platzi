@@ -25,7 +25,7 @@ import config from 'config';
           username,
           password,
           database,
-          synchronize: true,
+          synchronize: false,
           autoLoadEntities: true
         };
       }

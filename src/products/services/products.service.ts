@@ -10,31 +10,25 @@ export class ProductsService {
     @InjectRepository(Product)
     private productsRepository: Repository<Product>)
     {}
-    async findAll(): Promise<Product[]> {
+    async findAll() {
         return await this.productsRepository.find();
     }
-    async findOne(id: number): Promise<Product | null> {
+    async findOne(id: number) {
         return await this.productsRepository.findOneBy({id});
     }
     async create(payload: CreateProductDto) {
-      const newProduct = new Product();
-      Object.assign(newProduct, payload);
-      await this.productsRepository.save(newProduct);
-      return newProduct;
+      const newProduct = this.productsRepository.create({...payload, createAt: new Date(), updateAt: new Date()});
+      return await this.productsRepository.save(newProduct);
     }
-    async update(id: number, payload: UpdateProductDto): Promise<Product | null> {
-        const productToUpdate = await this.productsRepository.findOneBy({id});
-        if(productToUpdate) {
-            Object.assign(productToUpdate, payload);
-            await this.productsRepository.save(productToUpdate);
-            return productToUpdate;
-        }
-        return null;
+    async update(id: number, payload: UpdateProductDto)  {
+        const productToUpdate = await this.findOne(id);
+        if(!productToUpdate) return null;
+        this.productsRepository.merge(productToUpdate, {...payload, updateAt: new Date()});
+        return await this.productsRepository.save(productToUpdate);
     }
-    async delete(id: number): Promise<Product | null> {
-        const productToDelete = await this.productsRepository.findOneBy({id});
+    async delete(id: number) {
+        const productToDelete = await this.findOne(id);
         if(!productToDelete) return null;
-        await this.productsRepository.remove(productToDelete);
-        return productToDelete;
+        return await this.productsRepository.remove(productToDelete);
     }
 }

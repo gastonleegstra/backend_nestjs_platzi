@@ -14,42 +14,95 @@ export class OrdersService {
     private customersService: CustomersService,
     private productsService: ProductsService)
     {}
-  async create(payload: createOrderDto): Promise<Order | null> {
+  async create(payload: createOrderDto){
     let products: Product[] = await Promise.all(payload.productsIds.map(id => this.productsService.findOne(id)));
     let customer = await this.customersService.findOne(payload.customerId);
-    let newOrder: Order = new Order();
-    Object.assign(newOrder, {
+
+    if(!customer || products.length === 0) return null;
+
+    const newOrder = this.ordersRepository.create({
       customer,
       status: payload.status,
       products,
       total: products.reduce((total, product) => total + product.price, 0),
       createdAt: new Date(),
       updatedAt: new Date()
-    })
-    this.ordersRepository.save(newOrder);
-    return newOrder;
+    });
+
+    return await this.ordersRepository.save(newOrder);
   }
-  async update(id: number, payload: updateOrderDto): Promise<Order | null> {
-    const orderToUpdate = await this.ordersRepository.findOneBy({id});
-    if(orderToUpdate) {
-        Object.assign(orderToUpdate, payload);
-        await this.ordersRepository.save(orderToUpdate);
-        return orderToUpdate;
+  async update(id: number, payload: updateOrderDto) {
+    let orderToUpdate = await this.ordersRepository.findOne({
+      where: {id},
+      relations: {
+        customer: true,
+        products: true
+      }
+    });
+
+    if (!orderToUpdate) return null;
+
+    let updatedCustomer = payload.customerId && payload.customerId !== orderToUpdate.customer.id ?
+       await this.customersService.findOne(payload.customerId)
+       : orderToUpdate.customer;
+
+    let updatedProducts = orderToUpdate.products;
+
+    if(payload.productsIds && payload.productsIds.length > 0){
+      orderToUpdate = await this.ordersRepository.save({
+        ...orderToUpdate,
+        products: []
+      });
+      updatedProducts = await Promise.all(payload.productsIds.map(id => this.productsService.findOne(id)));
     }
-    return null;
+
+    const updatedTotal = updatedProducts.reduce((total, product) => total + product.price, 0);
+
+    this.ordersRepository.merge(orderToUpdate, {
+      status: payload.status || orderToUpdate.status,
+      customer: updatedCustomer,
+      products: updatedProducts,
+      total: updatedTotal,
+      updatedAt: new Date()
+    });
+
+    await this.ordersRepository.save(orderToUpdate);
+
+    return await this.ordersRepository.findOne({
+      where: {id},
+      relations: {
+        customer: {
+          user:true
+        },
+        products: true
+      }
+    });
   }
-  async findAll(): Promise<Order[]> {
-    return await this.ordersRepository.find();
+  async findAll(){
+    return await this.ordersRepository.find({
+      relations: {
+        customer: {
+          user: true
+        },
+        products: true
+      }
+    });
   }
-  async findOne(id: number): Promise<Order | null> {
-    return await this.ordersRepository.findOneBy({id}) ?? null;
+  async findOne(id: number) {
+    return await this.ordersRepository.findOne({
+      where: {id}, relations: {
+        customer: {
+          user: true
+        },
+        products: true
+      }
+    });
   }
 
   async delete (id: number) {
-    let orderToDelete = await this.ordersRepository.findOneBy({id});
+    let orderToDelete = await this.findOne(id);
     if (!orderToDelete) return null;
-    await this.ordersRepository.remove(orderToDelete);
-    return orderToDelete;
+    return await this.ordersRepository.remove(orderToDelete);
   }
 
 }

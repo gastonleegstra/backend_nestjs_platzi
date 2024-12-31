@@ -15,41 +15,42 @@ export class CustomersService {
     private usersService: UsersService)
   {}
 
-  async findAll(): Promise<Customer[]> {
-    return await this.customersRepository.find();
+  async findAll() {
+    return await this.customersRepository.find({
+      relations: {
+        user: true,
+      }
+    });
   }
-  async findOne(id: number): Promise<Customer | null> {
+  async findOne(id: number) {
     return await this.customersRepository.findOneBy({id});
   }
-  async create(payload: CreateCustomerDto): Promise<Customer|null> {
-    let user: User = await this.usersService.findOne(payload.id);
-    let newCustomer = new Customer();
-    Object.assign(newCustomer, {
+  async create(payload: CreateCustomerDto) {
+    const user: User = await this.usersService.findOne(payload.id);
+    if (!user) return null;
+    const newCustomer = this.customersRepository.create( {
       user,
       ...payload,
       createAt: new Date(),
       updateAt: new Date()
-    })
-    this.customersRepository.save(newCustomer);
-    return newCustomer;
+    });
+    return await this.customersRepository.save(newCustomer);
   }
-  async update(id: number, payload: UpdateCustomerDto): Promise<Customer | null> {
-    const customerToUpdate = await this.customersRepository.findOneBy({id});
+  async update(id: number, payload: UpdateCustomerDto) {
+    const customerToUpdate = await this.findOne(id);
     if (!customerToUpdate) return null;
     let user: User = await this.usersService.findOne(payload.id);
-    Object.assign(customerToUpdate,{
-      ...customerToUpdate,
+    if (!user) return null;
+    this.customersRepository.merge(customerToUpdate,{
       user,
       ...payload,
       updateAt: new Date()
     })
-    await this.customersRepository.save(customerToUpdate);
-    return customerToUpdate;
+    return await this.customersRepository.save(customerToUpdate);
   }
-  async delete(id: number): Promise<Customer | null> {
-    const customerToDelete = await this.customersRepository.findOneBy({id});
+  async delete(id: number){
+    const customerToDelete = await this.findOne(id);
     if (!customerToDelete) return null;
-    await this.customersRepository.remove(customerToDelete);
-    return customerToDelete;
+    return await this.customersRepository.remove(customerToDelete);
   }
 }
