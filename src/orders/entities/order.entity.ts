@@ -1,24 +1,40 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToMany, JoinTable, JoinColumn } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  ManyToMany,
+  JoinTable,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-import { Customer } from "@customersModule/entities/customer.entity";
-import { Product } from "@productsModule/entities/product.entity";
+import { Customer } from '@customersModule/entities/customer.entity';
+import { Product } from '@productsModule/entities/product.entity';
 
-@Entity()
+@Entity('orders')
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
-  @OneToOne(()=> Customer)
+  @OneToOne(() => Customer)
   @JoinColumn()
   customer: Customer;
-  @Column({type: 'varchar', length: 255})
+  @Column({ type: 'varchar', length: 255 })
   status: string;
   @ManyToMany(() => Product)
   @JoinTable()
   products: Product[];
-  @Column({type: 'float'})
+  @Column({ type: 'float' })
   total: number;
-  @Column({type: 'timestamp'})
+  @CreateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   createdAt: Date;
-  @Column({type: 'timestamp'})
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   updatedAt: Date;
 }

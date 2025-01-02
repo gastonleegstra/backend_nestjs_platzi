@@ -6,9 +6,6 @@ config({ path: enviroments[process.env.NODE_ENV]});
 
 const configService = new ConfigService();
 
-console.log('configService', configService);
-
-
 const AppDataSource = new DataSource({
   type: 'postgres',
   host: configService.get<string>('DATABASE_HOST'),

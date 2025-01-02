@@ -1,25 +1,38 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn} from "typeorm";
-import { User } from "@usersModule/entities/user.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { User } from '@usersModule/entities/user.entity';
 
-export class Address{
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
+export class Address {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
 }
 
-@Entity()
+@Entity('customers')
 export class Customer {
   @PrimaryGeneratedColumn()
   id: number;
   @OneToOne(() => User)
   @JoinColumn()
   user: User;
-  @Column({ type: "simple-json", nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   address?: Address;
-  @Column({ type: "timestamp" })
+  @CreateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   createAt: Date;
-  @Column({ type: "timestamp" })
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP'
+   })
   updateAt: Date;
 }
-

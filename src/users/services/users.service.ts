@@ -3,29 +3,30 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { User } from '@usersModule/entities/user.entity';
-import { CreateUserDto,UpdateUserDto } from '@usersModule/dtos/users.dto';
+import { CreateUserDto, UpdateUserDto } from '@usersModule/dtos/users.dto';
 
 @Injectable()
 export class UsersService {
-
-  constructor(@InjectRepository(User) private usersRepository: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private usersRepository: Repository<User>,
+  ) {}
   async findAll() {
     return await this.usersRepository.find();
   }
 
   async findOne(id: number) {
-    return await this.usersRepository.findOneBy({id});
+    return await this.usersRepository.findOneBy({ id });
   }
 
   async create(payload: CreateUserDto) {
-    const newUser = this.usersRepository.create({...payload, createAt: new Date(), updateAt: new Date()});
+    const newUser = this.usersRepository.create(payload);
     return await this.usersRepository.save(newUser);
   }
 
   async update(id: number, payload: UpdateUserDto) {
     const userToUpdate = await this.findOne(id);
-    if(!userToUpdate) return null;
-    this.usersRepository.merge(userToUpdate, {...payload, updateAt: new Date()});
+    if (!userToUpdate) return null;
+    this.usersRepository.merge(userToUpdate, payload);
     return await this.usersRepository.save(userToUpdate);
   }
 
@@ -34,5 +35,4 @@ export class UsersService {
     if (!userToDelete) return null;
     return await this.usersRepository.remove(userToDelete);
   }
-
 }

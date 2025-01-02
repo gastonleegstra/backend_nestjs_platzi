@@ -17,12 +17,7 @@ export class BrandsService {
   }
 
   async create(payload: CreateBrandDto) {
-
-    const newBrand = this.brandsRepository.create({
-      ...payload,
-      createAt: new Date(),
-      updateAt: new Date()
-    })
+    const newBrand = this.brandsRepository.create(payload);
 
     return await this.brandsRepository.save(newBrand);
   }
@@ -30,7 +25,7 @@ export class BrandsService {
   async update(id: number, payload: UpdateBrandDto) {
     const updatedBrand = await this.findOne(id);
     if (!updatedBrand) return null;
-    this.brandsRepository.merge(updatedBrand, {...payload, updateAt: new Date()});
+    this.brandsRepository.merge(updatedBrand, payload);
     return await this.brandsRepository.save(updatedBrand);
   }
 

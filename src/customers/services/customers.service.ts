@@ -31,8 +31,6 @@ export class CustomersService {
     const newCustomer = this.customersRepository.create( {
       user,
       ...payload,
-      createAt: new Date(),
-      updateAt: new Date()
     });
     return await this.customersRepository.save(newCustomer);
   }
@@ -43,8 +41,7 @@ export class CustomersService {
     if (!user) return null;
     this.customersRepository.merge(customerToUpdate,{
       user,
-      ...payload,
-      updateAt: new Date()
+      ...payload
     })
     return await this.customersRepository.save(customerToUpdate);
   }
