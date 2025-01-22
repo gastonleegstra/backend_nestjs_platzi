@@ -15,7 +15,11 @@ export class UsersService {
   }
 
   async findOne(id: number) {
-    return await this.usersRepository.findOneBy({ id });
+    return await this.usersRepository.findOne({
+      where: { id },
+      relations: {
+        customer: true
+      }});
   }
 
   async create(payload: CreateUserDto) {

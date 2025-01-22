@@ -22,7 +22,8 @@
     "migration:create": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create -d typeorm.config.ts ./src/data/migrations/migration",
     "migration:run": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d typeorm.config.ts",
     "migration:show": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:show -d typeorm.config.ts",
-    "migration:revert": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d typeorm.config.ts"
+    "migration:revert": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d typeorm.config.ts",
+    "schema:drop": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:drop -d typeorm.config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

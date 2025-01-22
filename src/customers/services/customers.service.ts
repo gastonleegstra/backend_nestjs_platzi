@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 
 import { CreateCustomerDto, UpdateCustomerDto } from '@customersModule/dtos/customers.dto';
 import { Customer } from '@customersModule/entities/customer.entity';
-import { UsersService } from '@usersModule/services/users.service';
 import { User } from '@usersModule/entities/user.entity';
 
 @Injectable()
@@ -12,32 +11,30 @@ export class CustomersService {
 
   constructor(
     @InjectRepository(Customer) private customersRepository: Repository<Customer>,
-    private usersService: UsersService)
+    @InjectRepository(User) private usersRepository: Repository<User>,
+  )
   {}
 
   async findAll() {
-    return await this.customersRepository.find({
-      relations: {
-        user: true,
-      }
-    });
+    return await this.customersRepository.find();
   }
   async findOne(id: number) {
-    return await this.customersRepository.findOneBy({id});
+    return await this.customersRepository.findOne({where: {id: id}, relations: {user: true}});
   }
   async create(payload: CreateCustomerDto) {
-    const user: User = await this.usersService.findOne(payload.id);
+    const user: User = await this.usersRepository.findOne({where: {id: payload.userId}});
     if (!user) return null;
-    const newCustomer = this.customersRepository.create( {
+    const newCustomer = new Customer();
+    this.customersRepository.merge(newCustomer, {
       user,
-      ...payload,
-    });
+      ...payload
+    })
     return await this.customersRepository.save(newCustomer);
   }
   async update(id: number, payload: UpdateCustomerDto) {
     const customerToUpdate = await this.findOne(id);
     if (!customerToUpdate) return null;
-    let user: User = await this.usersService.findOne(payload.id);
+    let user: User = await this.usersRepository.findOne({where: {id: payload.userId}});
     if (!user) return null;
     this.customersRepository.merge(customerToUpdate,{
       user,

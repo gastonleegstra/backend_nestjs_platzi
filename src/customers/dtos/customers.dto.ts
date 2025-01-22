@@ -23,7 +23,15 @@ export class CreateCustomerDto {
 
   @IsNotEmpty()
   @IsNumber()
-  readonly id: number;
+  readonly userId: number;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly firstName: string;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly lastName: string;
 
   @IsNotEmpty()
   @IsPhoneNumber()

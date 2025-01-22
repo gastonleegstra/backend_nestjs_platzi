@@ -8,7 +8,6 @@ import { ConfigType } from '@nestjs/config';
 //import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import config from 'config';
-
 @Global()
 @Module({
   //Configuracion de la base de datos con el modulo de typeorm usando

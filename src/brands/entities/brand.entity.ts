@@ -4,7 +4,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+
+import { Product } from '@productsModule/entities/product.entity';
 
 @Entity('brands')
 export class Brand {
@@ -17,6 +20,8 @@ export class Brand {
   @Column({ type: 'text' })
   description: string;
 
+  @OneToMany(() => Product, (product) => product.brand)
+  products: Product[];
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',

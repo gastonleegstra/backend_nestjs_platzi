@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, ParseIntPipe } from '@nestjs/common';
 import { createOrderDto, updateOrderDto } from '@ordersModule/dtos/orders.dto';
 import { OrdersService } from '@ordersModule/services/orders.service';
 
@@ -11,8 +11,8 @@ export class OrdersController {
     }
 
     @Get(':id')
-    getOne(@Param('id') id:string){
-        return this.ordersService.findOne(+id);
+    getOne(@Param('id', ParseIntPipe) id:number){
+        return this.ordersService.findOne(id);
     }
 
     @Post()
@@ -21,12 +21,12 @@ export class OrdersController {
     }
 
     @Put(':id')
-    update(@Param('id') id: string, @Body() payload: updateOrderDto) {
-        return this.ordersService.update(+id, payload);
+    update(@Param('id', ParseIntPipe) id: number, @Body() payload: updateOrderDto) {
+        return this.ordersService.update(id, payload);
     }
 
     @Delete(':id')
-    delete(@Param('id') id: string) {
-        return this.ordersService.delete(+id);
+    delete(@Param('id', ParseIntPipe) id: number) {
+        return this.ordersService.delete(id);
     }
 }
