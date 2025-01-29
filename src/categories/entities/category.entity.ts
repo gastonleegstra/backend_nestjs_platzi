@@ -4,7 +4,11 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
+
+import { Product } from '@productsModule/entities/product.entity';
 
 @Entity('categories')
 export class Category {
@@ -16,12 +20,16 @@ export class Category {
   description: string;
   @CreateDateColumn({
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
   @UpdateDateColumn({
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP',
   })
   updateAt: Date;
+
+  @JoinTable()
+  @ManyToMany(() => Product)
+  products: Product[];
 }

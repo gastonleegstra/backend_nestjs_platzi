@@ -1,5 +1,5 @@
-import {PartialType} from '@nestjs/swagger';
-import {IsNumber, Min, IsNotEmpty} from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
+import { IsNumber, Min, IsNotEmpty } from 'class-validator';
 
 export class createOrderItemDto {
   @IsNotEmpty()

@@ -2,18 +2,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CreateBrandDto, UpdateBrandDto } from '@brandsModule/dtos/brands.dto';
-import { Brand } from 'src/brands/entities/brand.entity';
+import { Brand } from '@brandsModule/entities/brand.entity';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class BrandsService {
-  constructor(@InjectRepository(Brand) private brandsRepository: Repository<Brand>) {}
+  constructor(
+    @InjectRepository(Brand) private brandsRepository: Repository<Brand>,
+  ) {}
   async findAll() {
     return await this.brandsRepository.find();
   }
 
   async findOne(id: number) {
-    return await this.brandsRepository.findOneBy({id});
+    return await this.brandsRepository.findOneBy({ id });
   }
 
   async create(payload: CreateBrandDto) {
