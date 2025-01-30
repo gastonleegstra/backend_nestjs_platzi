@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { In } from 'typeorm';
+import { In, FindOptionsWhere, Between } from 'typeorm';
 
 import { Product } from '@productsModule/entities/product.entity';
 import { Brand } from '@brandsModule/entities/brand.entity';
 import {
   CreateProductDto,
   UpdateProductDto,
+  PaginationProductDto,
 } from '@productsModule/dtos/products.dto';
-import { PaginationDto } from 'src/dtos/pagination.dto';
 
 @Injectable()
 export class ProductsService {
@@ -19,10 +19,13 @@ export class ProductsService {
     @InjectRepository(Brand)
     private brandsRepository: Repository<Brand>,
   ) {}
-  async findAll(params?: PaginationDto) {
+  async findAll(params?: PaginationProductDto) {
+    const where: FindOptionsWhere<Product> = {};
     if (!params) return await this.productsRepository.find();
-    const { limit, offset } = params;
+    const { limit, offset, minPrice, maxPrice } = params;
+    if (minPrice && maxPrice) where.price = Between(minPrice, maxPrice);
     return await this.productsRepository.find({
+      where,
       take: limit,
       skip: offset,
     });

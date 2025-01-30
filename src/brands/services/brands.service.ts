@@ -21,7 +21,10 @@ export class BrandsService {
   }
 
   async findOne(id: number) {
-    return await this.brandsRepository.findOneBy({ id });
+    return await this.brandsRepository.findOne({
+      where: { id },
+      relations: { products: true },
+    });
   }
 
   async create(payload: CreateBrandDto) {
