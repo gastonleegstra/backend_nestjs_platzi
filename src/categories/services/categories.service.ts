@@ -6,6 +6,7 @@ import {
   CreateCategoryDto,
   UpdateCategoryDto,
 } from '@categoriesModule/dtos/categories.dto';
+import { PaginationDto } from 'src/dtos/pagination.dto';
 @Injectable()
 export class CategoriesService {
   constructor(
@@ -33,7 +34,12 @@ export class CategoriesService {
   async findOne(id: number) {
     return await this.categoriesRepository.findOneBy({ id });
   }
-  async findAll() {
-    return await this.categoriesRepository.find();
+  async findAll(params?: PaginationDto) {
+    if (!params) return await this.categoriesRepository.find();
+    const { limit, offset } = params;
+    return await this.categoriesRepository.find({
+      take: limit,
+      skip: offset,
+    });
   }
 }

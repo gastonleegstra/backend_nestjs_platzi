@@ -1,20 +1,29 @@
-import { Controller, Query, Get, Param, Post, Body, Put, Delete, ParseIntPipe, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Query,
+  Get,
+  Param,
+  Post,
+  Body,
+  Put,
+  Delete,
+  ParseIntPipe,
+  NotFoundException,
+} from '@nestjs/common';
 import { ProductsService } from '@productsModule/services/products.service';
-import { CreateProductDto, UpdateProductDto, ProductDto } from '@productsModule/dtos/products.dto';
+import {
+  CreateProductDto,
+  UpdateProductDto,
+} from '@productsModule/dtos/products.dto';
+
+import { PaginationDto } from 'src/dtos/pagination.dto';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private productService: ProductsService) { }
+  constructor(private productService: ProductsService) {}
   @Get()
-  getAll(
-    @Query('limit') limit = 100,
-    @Query('offset') offset = 0,
-    @Query('brand') brand: string,
-  ) {
-    // return {
-    //     message: `Products limit=${limit} offset=${offset} brand=${brand}`,
-    // };
-    return this.productService.findAll();
+  getAll(@Query() params: PaginationDto) {
+    return this.productService.findAll(params);
   }
 
   @Get(':id')
@@ -27,19 +36,19 @@ export class ProductsController {
   }
 
   @Post()
-  create(@Body() payload: ProductDto) {
+  create(@Body() payload: CreateProductDto) {
     return this.productService.create({
       ...payload,
-      createAt: new Date(),
-      updateAt: new Date()
     });
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: string, @Body() payload: ProductDto) {
+  update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() payload: UpdateProductDto,
+  ) {
     return this.productService.update(+id, {
       ...payload,
-      updateAt: new Date()
     });
   }
 

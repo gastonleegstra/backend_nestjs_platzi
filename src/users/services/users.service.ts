@@ -4,22 +4,29 @@ import { Repository } from 'typeorm';
 
 import { User } from '@usersModule/entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '@usersModule/dtos/users.dto';
+import { PaginationDto } from 'src/dtos/pagination.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
-  async findAll() {
-    return await this.usersRepository.find();
+  async findAll(params?: PaginationDto) {
+    if (!params) return await this.usersRepository.find();
+    const { limit, offset } = params;
+    return await this.usersRepository.find({
+      take: limit,
+      skip: offset,
+    });
   }
 
   async findOne(id: number) {
     return await this.usersRepository.findOne({
       where: { id },
       relations: {
-        customer: true
-      }});
+        customer: true,
+      },
+    });
   }
 
   async create(payload: CreateUserDto) {

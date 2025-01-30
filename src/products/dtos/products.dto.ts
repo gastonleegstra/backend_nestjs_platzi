@@ -1,38 +1,40 @@
-import { IsOptional, IsDate,IsNotEmpty, IsNumber, IsString, IsUrl, IsPositive } from "class-validator";
-import { PartialType } from "@nestjs/swagger";
-import e from "express";
-export class ProductDto {
-    @IsString()
-    @IsNotEmpty()
-    readonly title: string;
+import {
+  IsOptional,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsUrl,
+  IsPositive,
+} from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
 
-    @IsString()
-    @IsNotEmpty()
-    readonly description: string;
+export class CreateProductDto {
+  @IsString()
+  @IsNotEmpty()
+  readonly title: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    @IsPositive()
-    readonly price: number;
+  @IsString()
+  @IsNotEmpty()
+  readonly description: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    @IsPositive()
-    readonly stock: number;
+  @IsNumber()
+  @IsNotEmpty()
+  @IsPositive()
+  readonly price: number;
 
-    @IsOptional()
-    @IsUrl()
-    readonly image: string;
+  @IsNumber()
+  @IsNotEmpty()
+  @IsPositive()
+  readonly stock: number;
+
+  @IsOptional()
+  @IsUrl()
+  readonly image: string;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  readonly brandId: number;
 }
 
-export class CreateProductDto extends PartialType(ProductDto) {
-  @IsDate()
-  @IsOptional()
-  readonly createAt: Date;
-
-  @IsDate()
-  @IsOptional()
-  readonly updateAt: Date;
-}
-
-export class UpdateProductDto extends PartialType(CreateProductDto){}
+export class UpdateProductDto extends PartialType(CreateProductDto) {}

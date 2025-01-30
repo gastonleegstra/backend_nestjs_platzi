@@ -1,14 +1,26 @@
-import { AddressDto, CreateCustomerDto } from '@customersModule/dtos/customers.dto';
-import { Controller, Get, Param, Post, Body, Put, Delete, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Query,
+  Put,
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
+
 import { CustomersService } from '@customersModule/services/customers.service';
+import { CreateCustomerDto } from '@customersModule/dtos/customers.dto';
+import { PaginationDto } from 'src/dtos/pagination.dto';
 import { Address } from '@customersModule/entities/customer.entity';
 
 @Controller('customers')
 export class CustomersController {
-  constructor(private readonly customersService: CustomersService) { }
+  constructor(private readonly customersService: CustomersService) {}
   @Get()
-  getAll() {
-    return this.customersService.findAll();
+  getAll(@Query() params: PaginationDto) {
+    return this.customersService.findAll(params);
   }
 
   @Get(':id')
@@ -18,10 +30,10 @@ export class CustomersController {
 
   @Post()
   create(@Body() payload: CreateCustomerDto) {
-    let address: Address = payload.address;
+    const address: Address = payload.address;
     return this.customersService.create({
       ...payload,
-      address
+      address,
     });
   }
 

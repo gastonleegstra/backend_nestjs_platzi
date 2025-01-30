@@ -1,17 +1,23 @@
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CreateBrandDto, UpdateBrandDto } from '@brandsModule/dtos/brands.dto';
 import { Brand } from '@brandsModule/entities/brand.entity';
-import { Injectable } from '@nestjs/common';
+import { PaginationDto } from 'src/dtos/pagination.dto';
 
 @Injectable()
 export class BrandsService {
   constructor(
     @InjectRepository(Brand) private brandsRepository: Repository<Brand>,
   ) {}
-  async findAll() {
-    return await this.brandsRepository.find();
+  async findAll(params?: PaginationDto) {
+    if (!params) return await this.brandsRepository.find();
+    const { limit, offset } = params;
+    return await this.brandsRepository.find({
+      take: limit,
+      skip: offset,
+    });
   }
 
   async findOne(id: number) {

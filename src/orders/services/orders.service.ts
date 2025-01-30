@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { createOrderDto, updateOrderDto } from '@ordersModule/dtos/orders.dto';
+import { PaginationDto } from 'src/dtos/pagination.dto';
 import { Order } from '@ordersModule/entities/order.entity';
 import { CustomersService } from '@customersModule/services/customers.service';
 
@@ -12,8 +13,7 @@ export class OrdersService {
     private customersService: CustomersService,
   ) {}
   async create(payload: createOrderDto) {
-
-    let customer = await this.customersService.findOne(payload.customerId);
+    const customer = await this.customersService.findOne(payload.customerId);
 
     if (!customer) return null;
 
@@ -24,17 +24,16 @@ export class OrdersService {
     return await this.ordersRepository.save(newOrder);
   }
   async update(id: number, payload: updateOrderDto) {
-
-    let orderToUpdate = await this.ordersRepository.findOne({
+    const orderToUpdate = await this.ordersRepository.findOne({
       where: { id },
       relations: {
-        customer: true
+        customer: true,
       },
     });
 
     if (!orderToUpdate) return null;
 
-    let updatedCustomer =
+    const updatedCustomer =
       payload.customerId && payload.customerId !== orderToUpdate.customer.id
         ? await this.customersService.findOne(payload.customerId)
         : orderToUpdate.customer;
@@ -50,17 +49,28 @@ export class OrdersService {
       relations: {
         customer: {
           user: true,
-        }
+        },
       },
     });
   }
-  async findAll() {
+  async findAll(params?: PaginationDto) {
+    if (!params)
+      return await this.ordersRepository.find({
+        relations: {
+          customer: {
+            user: true,
+          },
+        },
+      });
+    const { limit, offset } = params;
     return await this.ordersRepository.find({
       relations: {
         customer: {
           user: true,
         },
       },
+      take: limit,
+      skip: offset,
     });
   }
   async findOne(id: number) {
@@ -71,14 +81,14 @@ export class OrdersService {
           user: true,
         },
         items: {
-          product: true
-        }
+          product: true,
+        },
       },
     });
   }
 
   async delete(id: number) {
-    let orderToDelete = await this.findOne(id);
+    const orderToDelete = await this.findOne(id);
     if (!orderToDelete) return null;
     return await this.ordersRepository.remove(orderToDelete);
   }

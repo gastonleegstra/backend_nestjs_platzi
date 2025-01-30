@@ -8,6 +8,7 @@ import { ConfigType } from '@nestjs/config';
 //import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import config from 'config';
+
 @Global()
 @Module({
   //Configuracion de la base de datos con el modulo de typeorm usando
@@ -16,7 +17,8 @@ import config from 'config';
     TypeOrmModule.forRootAsync({
       inject: [config.KEY],
       useFactory: (configService: ConfigType<typeof config>): any => {
-        const { host, port, username, password, database, type} = configService.database;
+        const { host, port, username, password, database, type } =
+          configService.database;
         return {
           type,
           host,
@@ -25,12 +27,13 @@ import config from 'config';
           password,
           database,
           synchronize: false,
-          autoLoadEntities: true
+          autoLoadEntities: true,
         };
-      }
-    })
+      },
+    }),
   ],
-  exports: [TypeOrmModule]
+  providers: [],
+  exports: [TypeOrmModule],
 
   //Configuracion de la base de datos con el modulo de typeorm usando
   // el ConfigModule y ConfigService enfoque dinamico

@@ -2,12 +2,14 @@ import {
   CreateCategoryDto,
   UpdateCategoryDto,
 } from '@categoriesModule/dtos/categories.dto';
+import { PaginationDto } from 'src/dtos/pagination.dto';
 import {
   Controller,
   ParseIntPipe,
   Get,
   Param,
   Post,
+  Query,
   Body,
   Put,
   Delete,
@@ -17,8 +19,8 @@ import { CategoriesService } from '@categoriesModule/services/categories.service
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
   @Get()
-  getAll() {
-    return this.categoriesService.findAll();
+  getAll(@Query() params: PaginationDto) {
+    return this.categoriesService.findAll(params);
   }
 
   @Get(':id')
