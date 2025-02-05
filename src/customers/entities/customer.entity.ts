@@ -22,8 +22,10 @@ export class Address {
 export class Customer {
   @PrimaryGeneratedColumn()
   id: number;
-  @OneToOne(() => User,(user) => user.customer,{nullable: true})
-  @JoinColumn()
+  @OneToOne(() => User, (user) => user.customer, { nullable: true })
+  @JoinColumn({
+    name: 'user_id',
+  })
   user: User;
 
   @Column({ type: 'varchar', length: 255 })
@@ -32,21 +34,23 @@ export class Customer {
   @Column({ type: 'varchar', length: 255 })
   lastName: string;
 
-  @Column({ type: 'varchar', length: 255 , default: null})
+  @Column({ type: 'varchar', length: 255, default: null })
   phone: string;
 
-  @OneToMany(() => User,(order) => order.customer,{nullable: true})
+  @OneToMany(() => Order, (order) => order.customer, { nullable: true })
   orders: Order[];
   @Column({ type: 'simple-json', nullable: true })
   address?: Address;
   @CreateDateColumn({
+    name: 'create_at',
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
   @UpdateDateColumn({
+    name: 'update_at',
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'
-   })
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   updateAt: Date;
 }

@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   ManyToMany,
+  JoinColumn,
 } from 'typeorm';
 
 import { Brand } from '@brandsModule/entities/brand.entity';
@@ -26,16 +27,19 @@ export class Product {
   @Column({ type: 'varchar', nullable: true })
   image: string;
   @CreateDateColumn({
+    name: 'create_at',
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
   @UpdateDateColumn({
+    name: 'update_at',
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   updateAt: Date;
   @ManyToOne(() => Brand, (brand) => brand.products)
+  @JoinColumn({ name: 'brand_id' })
   brand: Brand;
   @ManyToMany(() => Category)
   categories: Category[];

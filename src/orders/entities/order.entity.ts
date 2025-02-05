@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 import { Customer } from '@customersModule/entities/customer.entity';
-import {OrderItem} from './order-item.entity';
+import { OrderItem } from './order-item.entity';
 
 @Entity('orders')
 export class Order {
@@ -17,18 +17,20 @@ export class Order {
   @ManyToOne(() => Customer, (customer) => customer.orders)
   customer: Customer;
 
-  @OneToMany(()=> OrderItem, (orderItem) => orderItem.order)
-  items: OrderItem[]
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+  items: OrderItem[];
 
   @CreateDateColumn({
+    name: 'create_at',
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
+    name: 'update_at',
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
 }

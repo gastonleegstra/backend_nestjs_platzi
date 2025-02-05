@@ -19,17 +19,27 @@ export class Category {
   @Column({ type: 'text' })
   description: string;
   @CreateDateColumn({
+    name: 'create_at',
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
   @UpdateDateColumn({
+    name: 'update_at',
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   updateAt: Date;
 
-  @JoinTable()
+  @JoinTable({
+    name: 'categories_products',
+    joinColumn: {
+      name: 'category_id',
+    },
+    inverseJoinColumn: {
+      name: 'product_id',
+    },
+  })
   @ManyToMany(() => Product)
   products: Product[];
 }

@@ -17,16 +17,19 @@ export class User {
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
-  @OneToOne(() => Customer, (customer) => customer.user, {nullable: true})
+  @OneToOne(() => Customer, (customer) => customer.user, { nullable: true })
   customer: Customer;
 
   @CreateDateColumn({
+    name: 'create_at',
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'
-   })
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   createAt: Date;
   @UpdateDateColumn({
+    name: 'update_at',
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'})
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   updateAt: Date;
 }

@@ -1,11 +1,17 @@
-
 import { plainToInstance } from 'class-transformer';
-import { IsString, IsEnum, IsNumber, Max, Min, validateSync } from 'class-validator';
+import {
+  IsString,
+  IsEnum,
+  IsNumber,
+  Max,
+  Min,
+  validateSync,
+} from 'class-validator';
 
 enum Environment {
-  dev = "dev",
-  qa = "qa",
-  prod = "prod",
+  dev = 'dev',
+  qa = 'qa',
+  prod = 'prod',
 }
 
 class EnvironmentVariables {
@@ -17,7 +23,7 @@ class EnvironmentVariables {
   @Max(65535)
   PORT: number;
 
-  DATABASE: DatabaseVariables
+  DATABASE: DatabaseVariables;
 }
 
 class DatabaseVariables {
@@ -43,12 +49,12 @@ class DatabaseVariables {
 }
 
 export function validate(config: Record<string, unknown>) {
-  const validatedConfig = plainToInstance(
-    EnvironmentVariables,
-    config,
-    { enableImplicitConversion: true },
-  );
-  const errors = validateSync(validatedConfig, { skipMissingProperties: false });
+  const validatedConfig = plainToInstance(EnvironmentVariables, config, {
+    enableImplicitConversion: true,
+  });
+  const errors = validateSync(validatedConfig, {
+    skipMissingProperties: false,
+  });
 
   if (errors.length > 0) {
     throw new Error(errors.toString());
