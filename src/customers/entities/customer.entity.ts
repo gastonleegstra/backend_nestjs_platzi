@@ -8,7 +8,7 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
 import { User } from '@usersModule/entities/user.entity';
 import { Order } from '@ordersModule/entities/order.entity';
@@ -24,11 +24,18 @@ export class Address {
 export class Customer {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Exclude()
   @OneToOne(() => User, (user) => user.customer, { nullable: true })
   @JoinColumn({
     name: 'user_id',
   })
   user: User;
+
+  @Expose()
+  get email(): string {
+    return `${this.user.email}`;
+  }
 
   @Column({ type: 'varchar', length: 255 })
   firstName: string;

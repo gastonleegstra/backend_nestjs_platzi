@@ -23,10 +23,11 @@ export class OrderItemService {
     const order = await this.ordersRepository.findOne({
       where: { id: payload.idOrder },
     });
+    if (!order) return null;
     const product = await this.productsRepository.findOne({
       where: { id: payload.idProducto },
     });
-
+    if (!product) return null;
     const orderItem = this.orderItemRepository.create({
       quantity: payload.quantity,
       product,

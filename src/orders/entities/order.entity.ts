@@ -6,7 +6,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
 import { Customer } from '@customersModule/entities/customer.entity';
 import { OrderItem } from './order-item.entity';
@@ -18,8 +18,33 @@ export class Order {
   @ManyToOne(() => Customer, (customer) => customer.orders)
   customer: Customer;
 
+  @Exclude()
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   items: OrderItem[];
+
+  @Expose()
+  get products() {
+    if (!this.items) return [];
+    return this.items
+      .filter((item) => !!item)
+      .map((item) => ({
+        idItem: item.id,
+        idProduct: item.product.id,
+        title: item.product.title,
+        price: item.product.price,
+        quantity: item.quantity,
+      }));
+  }
+
+  @Expose()
+  get total() {
+    if (!this.items) return 0;
+    return this.items
+      .filter((item) => !!item)
+      .reduce((total, item) => {
+        return total + item.product.price * item.quantity;
+      }, 0);
+  }
 
   @Exclude()
   @CreateDateColumn({
