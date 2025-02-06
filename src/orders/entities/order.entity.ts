@@ -6,6 +6,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 import { Customer } from '@customersModule/entities/customer.entity';
 import { OrderItem } from './order-item.entity';
@@ -20,6 +21,7 @@ export class Order {
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   items: OrderItem[];
 
+  @Exclude()
   @CreateDateColumn({
     name: 'create_at',
     type: 'timestamptz',
@@ -27,6 +29,7 @@ export class Order {
   })
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({
     name: 'update_at',
     type: 'timestamptz',

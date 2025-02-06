@@ -8,6 +8,8 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
+
 import { User } from '@usersModule/entities/user.entity';
 import { Order } from '@ordersModule/entities/order.entity';
 
@@ -41,12 +43,16 @@ export class Customer {
   orders: Order[];
   @Column({ type: 'simple-json', nullable: true })
   address?: Address;
+
+  @Exclude()
   @CreateDateColumn({
     name: 'create_at',
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
+
+  @Exclude()
   @UpdateDateColumn({
     name: 'update_at',
     type: 'timestamptz',

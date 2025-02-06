@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 import { Order } from './order.entity';
 import { Product } from '@productsModule/entities/product.entity';
@@ -18,6 +19,7 @@ export class OrderItem {
   @Column({ type: 'int' })
   quantity: number;
 
+  @Exclude()
   @CreateDateColumn({
     name: 'create_at',
     type: 'timestamptz',
@@ -25,6 +27,7 @@ export class OrderItem {
   })
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({
     name: 'update_at',
     type: 'timestamptz',
