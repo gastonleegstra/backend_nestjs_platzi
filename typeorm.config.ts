@@ -15,7 +15,7 @@ const AppDataSource = new DataSource({
   database: configService.get<string>('DATABASE_NAME'),
   synchronize: false,
   entities: ['**/*.entity.ts'],
-  migrations: ['src/data/migrations/*-migration.ts'],
+  migrations: ['src/data/migrations/*.ts'],
   migrationsRun: false,
   logging: true,
 });
