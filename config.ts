@@ -11,5 +11,7 @@ export default registerAs('config', () => {
       database: process.env.DATABASE_NAME,
       type: process.env.DATABASE_TYPE,
     },
+    apiKey: process.env.API_KEY,
+    jwtSecret: process.env.JWT_SECRET,
   };
 });

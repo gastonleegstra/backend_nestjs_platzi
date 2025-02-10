@@ -8,23 +8,29 @@ import {
   Put,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 import { CreateBrandDto, UpdateBrandDto } from '@brandsModule/dtos/brands.dto';
 import { PaginationDto } from 'src/dtos/pagination.dto';
 import { BrandsService } from '@brandsModule/services/brands.service';
+import { JwtAuthGuard } from '@authModule/guards/jwt-auth.guard';
+import { Public } from '@authModule/decorators/public.decorator';
 
+@UseGuards(JwtAuthGuard)
 @ApiTags('brands')
 @Controller('brands')
 export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
+  @Public()
   @ApiOperation({ summary: 'Get all brands' })
   @Get()
   getAll(@Query() params: PaginationDto) {
     return this.brandsService.findAll(params);
   }
 
+  @Public()
   @ApiOperation({ summary: 'Get one brand' })
   @Get(':id')
   getOne(@Param('id', ParseIntPipe) id: string) {

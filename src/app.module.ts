@@ -14,6 +14,7 @@ import { enviroments } from 'enviroments';
 import config from 'config';
 import { validate } from 'env.validation';
 import { DataModule } from './data/data.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { DataModule } from './data/data.module';
       validate,
     }),
     DataModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

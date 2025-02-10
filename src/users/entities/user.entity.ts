@@ -18,6 +18,10 @@ export class User {
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
+  @Exclude()
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  password: string;
+
   @OneToOne(() => Customer, (customer) => customer.user, { nullable: true })
   customer: Customer;
 

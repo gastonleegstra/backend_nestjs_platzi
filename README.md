@@ -26,11 +26,30 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Project setup
+## Project Setup and Configuration Guide
 
-```bash
-$ npm install
-```
+### 1. Project Setup
+- **Install NestJS CLI**: Run `npm install -g @nestjs/cli` to install the NestJS command line interface.
+- **Create a new project**: Use `nest new project-name` to create a new NestJS project.
+- **Install necessary dependencies**: Run `npm install` to install all dependencies listed in `package.json`.
+
+### 2. Directory Structure
+- **Overview of the main directories and files**:
+  - `src/auth`: Contains authentication-related files.
+  - `src/brands`: Contains brand-related controllers and services.
+  - `src/auth/guards`: Contains authentication guards.
+  - `src/auth/strategies`: Contains authentication strategies.
+  - `src/auth/auth.module.ts`: Main module for authentication.
+
+### 3. Configuration Details
+- **Explanation of key files**:
+  - `jwt-auth.guard.ts`: Implements JWT authentication guard. It checks if the user is authenticated based on the JWT token.
+  - `local-auth.guard.ts`: Implements local strategy authentication guard. It verifies user credentials.
+  - `api-key.guard.ts`: Guard for authenticating API keys.
+  - `jwt.strategy.ts`: Defines the strategy for validating JWT tokens and extracting user information.
+
+### 4. Code Comments
+- Inline comments explaining the functionality of critical code sections will be added throughout the codebase.
 
 ## Compile and run the project
 

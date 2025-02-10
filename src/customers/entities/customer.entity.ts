@@ -34,6 +34,7 @@ export class Customer {
 
   @Expose()
   get email(): string {
+    if(!this.user) return '';
     return `${this.user.email}`;
   }
 

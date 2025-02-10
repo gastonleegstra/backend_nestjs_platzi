@@ -24,6 +24,12 @@ class EnvironmentVariables {
   PORT: number;
 
   DATABASE: DatabaseVariables;
+
+  @IsString()
+  API_KEY: string;
+
+  @IsString()
+  JWT_SECRET: string;
 }
 
 class DatabaseVariables {
