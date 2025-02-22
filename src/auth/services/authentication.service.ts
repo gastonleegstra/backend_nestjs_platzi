@@ -21,8 +21,14 @@ export class AuthenticationService {
     return user;
   }
 
-  async generateJWT(user: User) {
-    const payload: PayloadToken = { email: user.email, sub: user.id };
+  async generateJWT(user: User | { email: string, googleId: string, name: string }) {
+    console.log('user ->',user);
+    let payload: PayloadToken;
+    if ('googleId' in user) {
+      payload = { email: user.email, sub: user.googleId };
+    } else {
+      payload = { email: user.email, sub: user.id };
+    }
     return {
       access_token: this.jwtService.sign(payload),
       user

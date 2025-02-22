@@ -30,6 +30,18 @@ class EnvironmentVariables {
 
   @IsString()
   JWT_SECRET: string;
+
+  @IsString()
+  JWT_EXPIRE_IN: string;
+
+  @IsString()
+  GOOGLE_CLIENT_ID: string;
+
+  @IsString()
+  GOOGLE_CLIENT_SECRET: string;
+
+  @IsString()
+  GOOGLE_CALLBACK_URL: string;
 }
 
 class DatabaseVariables {
